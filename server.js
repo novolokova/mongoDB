@@ -1,20 +1,75 @@
-const http = require('http')
-const express = require ('express')
-const yup = require('yup')
-const mongoose = require('mongoose')
+const http = require("http");
+const express = require("express");
+const yup = require("yup");
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const app = express()
-app.use(express.json())
+mongoose
+  .connect("mongodb://localhost:27017/fm_mongoose")
+  .catch((error) => console.log(error));
 
+const emailSchema = yup.string().trim().email().required();
 
-app.get('/', async(req, res, next)=>{})
-app.post('/', async(req, res, next)=>{})
+const taskSchema = new Schema({
+  content: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => /[A-Z0-9][\w\s]{5,100}/.test(v),
+      message: (props) => `${props.value} is not a valid content!`,
+    },
+  },
+  isDone: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+  owner: {
+    name: {
+      type: String,
+      validate: {
+        validator: (v) => v !== "",
+        message: (props) => `${props.value} is not ampty!`,
+      },
+    },
+    age: {
+      type: Number,
+      validate: {
+        validator: (v) => v > 0 && v < 150,
+        message: (props) => `${props.value} is not a valid age!`,
+      },
+    },
+    email: {
+      type: String,
+      validate: {
+        validator: (v) => emailSchema.isValidSync(v),
+      },
+    },
+  },
+});
+const Task = mongoose.model("Task", taskSchema);
 
+const app = express();
+app.use(express.json());
 
-const server = http.createServer(app)
-const port = process.env.PORT || 3000;
-server.listen(port, () => {
-  console.log('server started at port ' + port);
+app.get("/", async (req, res, next) => {
+  try {
+    const task = await Task.find({});
+    res.status(201).send({ data: task });
+  } catch (error) {
+    next(error);
+  }
 });
 
+app.post("/", async (req, res, next) => {
+  try {
+    const { body } = req;
+    const newTask = await Task.create(body);
+    res.status(201).send({ data: newTask });
+  } catch (error) {
+    next(error);
+  }
+});
 
+const server = http.createServer(app);
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+  console.log("server started at port " + port);
+});
