@@ -1,0 +1,62 @@
+use("fm_mongo");
+
+// db.createCollection("studios", {
+//   validator: {
+//     $jsonSchema: {
+//       bsonType: "object",
+//       required: ["name"],
+//       properties: {
+//         name: {
+//           bsonType: "string",
+//         },
+//       },
+//     },
+//   },
+// });
+
+// db.studios.insertMany([{ name: "Pixsar" }, { name: "Fox" }, { name: "Marvel" }]);
+
+// db.movies.find()
+//******************************* */
+// db.movies.aggregate([
+//   {
+//     $lookup: {
+//       from: "studios",
+//       localField: "studioId",
+//       foreignField: "_id",
+//       as: "studio",
+//     },
+//   },
+//   { $unwind: "$studio" },
+//   { $unset: "studio._id" },
+
+// ]);
+
+//************************* */
+
+// db.movies.aggregate([
+//     {
+//   $group:
+//     {
+//       _id: "studioId", // Group key
+//       amount: { $sum : 1},
+      
+//     }
+//  }
+// ])
+
+//**************************** */
+// {
+//     "acknowledged": true,
+//     "insertedIds": {
+//       "0": {
+//         "$oid": "6433c5d67c78d5ac8c224174"
+//       },
+//       "1": {
+//         "$oid": "6433c5d67c78d5ac8c224175"
+//       },
+//       "2": {
+//         "$oid": "6433c5d67c78d5ac8c224176"
+//       }
+//     }
+//   }

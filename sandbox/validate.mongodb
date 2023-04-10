@@ -1,14 +1,18 @@
-// use("fm_mongo");
+use("fm_mongo");
+// db.movies.drop()
 
 // db.createCollection("movies", {
 //   validator: {
 //     $jsonSchema: {
 //       bsonType: "object",
-//       required: ["title", "director", "moreInfo"],
+//       required: ["title", "director", "moreInfo", "studioId"],
 //       properties: {
 //         title: {
 //           bsonType: "string",
 //           description: "must be string",
+//         },
+//         studioId:{
+//             bsonType: "objectId",
 //         },
 //         director: {
 //           bsonType: "string",
@@ -38,10 +42,11 @@
 // db.movies.insertOne({title:tr, director:45, moreInfo:''})
 
 // db.movies.insertMany([{
-//     title: "It",
+//     title: "Hatiko 3",
+//     studioId: new ObjectId('6433c5d67c78d5ac8c224175'),
 //     director: "Tarantino",
 //     moreInfo:{
-//         genre: "horror",
-//         year: 2000
+//         genre: "drama",
+//         year: 2002
 //     }
 // }]);
